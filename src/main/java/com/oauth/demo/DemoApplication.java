@@ -1,13 +1,13 @@
-package com.oauth.jwt;
+package com.oauth.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class OauthApplication {
+public class DemoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(OauthApplication.class, args);
+		SpringApplication.run(DemoApplication.class, args);
 	}
 
 }
