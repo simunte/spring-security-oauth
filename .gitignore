@@ -18,8 +18,12 @@
 *.zip
 *.tar.gz
 *.rar
+.idea
+.idea/*
 **/.idea
 **/.idea/*
+target
+target/*
 **/target
 **/target/*
 HELP.md
