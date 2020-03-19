@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,20 +37,12 @@ public class User extends Base implements UserDetails {
 
     private boolean isEnabled;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "user_role",
-            joinColumns =
-            @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns =
-            @JoinColumn(name = "role_id", referencedColumnName = "id")
-    )
-    private List<Role> roles;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<String> roles = new ArrayList<>();
+        roles.add("ADMIN");
         return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .map(role -> new SimpleGrantedAuthority(role))
                 .collect(Collectors.toList());
     }
 
@@ -58,5 +51,6 @@ public class User extends Base implements UserDetails {
         this.isAccountNonExpired = false;
         this.isAccountNonLocked = false;
         this.isCredentialsNonExpired = false;
+        this.isEnabled = true;
     }
 }

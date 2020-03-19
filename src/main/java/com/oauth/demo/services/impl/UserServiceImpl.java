@@ -1,6 +1,7 @@
 package com.oauth.demo.services.impl;
 
 import com.oauth.demo.domain.User;
+import com.oauth.demo.dto.UserDTO;
 import com.oauth.demo.repository.UserRepository;
 import com.oauth.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -25,7 +30,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userRepository.findTop1ByUsernameAndApprovedDateIsNotNullOrderByCreationDateDesc(s)
+        User user = userRepository.findTop1ByUsername(s)
                 .orElseThrow(() -> new UsernameNotFoundException(messageSource.getMessage(ERROR_NOT_FOUND,
                         new String[]{s},
                         LocaleContextHolder.getLocale())));
@@ -33,4 +38,17 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 user.getAuthorities());
     }
+
+    @Override
+    public List<UserDTO> getAllUser() {
+        return userRepository.findAll().stream().map(user -> {
+                UserDTO userDTO = new UserDTO();
+                userDTO.setUsername(user.getUsername());
+                userDTO.setEmail(user.getEmail());
+                return userDTO;
+        }
+        ).collect(Collectors.toCollection(LinkedList::new));
+    }
+
+
 }
